@@ -9,11 +9,14 @@ import { Text,
   SafeAreaView} from 'react-native';
 import Integrantes from "application/src/components/integrantes";
 import AddTarea from "application/src/components/AddTarea";
+import FAB from "application/src/components/FAB";
 import {getIntegrantes, newIntegrante,updateIntegrante,addIntegrante,deleteIntegrante} from "application/src/data/integrantes";
 
 
 class MainScreen extends Component {
-
+  static navigationOptions  = {
+    title: "Agenda Personal"
+  };
     constructor(props) {
       super(props)
     
@@ -29,6 +32,10 @@ class MainScreen extends Component {
       const integrantes = await getIntegrantes();
       this.setState({integrantes:integrantes, loading:false});
     };
+
+    componentWillUnmount() {
+      this._isMounted = false;
+    }
 
     handleAdd = (nuevaTarea) => {
       const {integrantes} = this.state;
@@ -61,30 +68,42 @@ class MainScreen extends Component {
     toggleModal = () => {
       this.setState({addModalVisible : !this.state.addModalVisible})
     };
+
+    openEditTarea = tarea => {
+      this.props.navigation.navigate("Edit",{
+        tarea,
+        onSave: this.handleUpdate
+      });
+    };
+    
     render(){ 
       const {integrantes, nuevoIntegrante, loading, addModalVisible} = this.state;
     return (
         <SafeAreaView style={styles.container}>
-          <Text selectable style= {styles.title}>Tareas a realizar</Text>
-          <View style={styles.addRow}>
-            <TextInput 
-              placeholder = "Nueva Tarea"
-              value = {nuevoIntegrante}
-              onChangeText = {integrante => this.setState({nuevoIntegrante: integrante})}
-              autoCapitalize = "words"
-              editable 
-              returnKeyType = "done"
-              style = {styles.textBox}/>
-            <Button title="añadir" onPress = {this.toggleModal} />
-          </View>
           { //Si el loading esta a True es decir no se han cargado los datos aun
           //entonces mostramos el Activity Indicator es decir la ruletita de carga
             loading && <ActivityIndicator style={styles.loading} size ="large" color="#0000ff"/> }
           {//Si el loading esta a false es decir ya se han cargado los datos entonces 
           //Mostramos los datos
             !loading &&
-          <Integrantes integrantes={integrantes} onUpdate={this.handleUpdate} onDelete={this.handleDelete}  />
+          <Integrantes 
+            integrantes={integrantes} 
+            onUpdate={this.handleUpdate} 
+            onDelete={this.handleDelete}
+            onEdit = {this.openEditTarea}  
+            />
           }
+          {/* El FAB es el Floating Action Botton que es el boton que 
+          usaremos para añadir una nueva Tarea 
+          Es un componente aparte que esta en src/components*/}
+          <FAB 
+          text = "+"
+          fabStyle={{backgroundColor:"#0066ff"}}
+          textStyle= {{color:"#fff"}}
+          onPress = {this.toggleModal}
+          />
+          {/*El AddTarea es la logica que utilizaremos para añadir una tarea nueva
+          mediante una ventana Modal es decir una ventana emergente */}
           <AddTarea visible={addModalVisible}
           onCloseModal = {this.toggleModal}
           onAddTarea = {this.handleAdd}
@@ -100,24 +119,6 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
       alignItems: 'center',
       justifyContent: "center"
-    },
-    title: {
-        marginTop: 20,
-        fontWeight: "bold",
-        justifyContent: "center",
-        alignItems: "center",
-        fontSize:30
-    },
-    textBox: {
-      borderWidth:1,
-      borderBottomWidth:1,
-      padding: 5,
-      flex:1,
-      
-    },
-    addRow: {
-      flexDirection : "row",
-      width: "80%"
     },
     loading: {
       flex: 1

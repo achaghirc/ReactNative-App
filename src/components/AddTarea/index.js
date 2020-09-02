@@ -1,60 +1,55 @@
 import React,{Component}from "react";
-import {Modal, Text, View, TextInput,StyleSheet,Button, TouchableOpacity} from "react-native";
-
+import {Modal, Text, View, TextInput,StyleSheet,Button, Picker} from "react-native";
+import BasicAddItems from "application/src/components/BasicAddItems";
+import DateTimePicker from '@react-native-community/datetimepicker';
 const initialState = {
     name: "",
     description: "",
     priority: 2
 };
-export default class AddTarea extends Component {
+class AddTarea extends Component {
     constructor(props) {
       super(props);
     
       this.state = {
-         ... initialState
+         ... initialState,
+         mode:'date',
+         show:false
       };
     };
     addTarea = () => {
         const {onAddTarea, onCloseModal} = this.props;
-        const {name, description} = this.state;
-        onAddTarea({name, description});
+        const {name, description,priority,date} = this.state;
+        onAddTarea({name, description, priority,date});
         //reset initialState for next Add
         this.setState(initialState);
         onCloseModal();
     };
+
     render () {
         const { visible, onCloseModal } = this.props;
         const { name, priority, description} = this.state;
+        
         return ( 
-            <Modal visible={visible} transparent={true} animationType="slide">
-                <View style = {styles.container}>
+            <Modal 
+                visible={visible} 
+                transparent={true} 
+                animationType="slide"
+                onRequestClose={onCloseModal}>
+                <View style={styles.container}>
                     <View style={styles.content}>
-                        <View style = {styles.block}>
-                            <Text>Titulo</Text>
-                            <TextInput 
-                                placeholder="Titulo"
-                                style = {styles.text}
-                                value={name}
-                                onChangeText={name => this.setState({name:name})}
-                                clearButtonMode="always"
-                            />
-                        </View>
-                        <View  style={styles.block}>
-                            <Text>Description</Text>
-                            <TextInput
-                                placeholder="Descripcion"
-                                style={styles.text}
-                                value={description}
-                                onChangeText={description => this.setState({description:description})}
-                                clearButtonMode="always"
-                            />
-                        </View>
+                        <BasicAddItems 
+                            name = {name}
+                            description ={description}
+                            priority={priority}
+                            onChange = {newState => this.setState(newState)}
+                        />
                         <View style={{flexDirection:"row",paddingBottom:28,justifyContent:"space-around"}}>
                             <Button title="Cancelar" onPress={onCloseModal} color="#ff0000"/>
                             <Button title="Añadir" onPress={this.addTarea}/>
                         </View>
                     </View>
-                </View>
+                </View> 
             </Modal>
         )
     }
@@ -63,7 +58,7 @@ export default class AddTarea extends Component {
 const styles = StyleSheet.create ({
     container: {
         flex:1, 
-        alignItems: "center",
+        alignItems: "flex-end",
         flexDirection: "row",
         backgroundColor:"rgba(0,0,0,0.55)"
     },
@@ -93,4 +88,6 @@ const styles = StyleSheet.create ({
     block: {
         margin: 10
     }
-})
+});
+
+export default AddTarea;

@@ -1,11 +1,13 @@
+import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Main from "application/src/screen/main"; 
+import AppNavigator from "application/src/navigator/AppNavigator"; 
+import MainScreen from "application/src/screen/main";
 
 export default function App() {
   return (
-    <Main />
+    <AppNavigator />
   );
 }
 

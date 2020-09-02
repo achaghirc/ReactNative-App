@@ -1,12 +1,19 @@
 import React, { Fragment } from 'react';
 import { Text, View,Image,TouchableOpacity, StyleSheet,SectionList } from 'react-native';
+import ChecKBox from "react-native-check-box";
 import deleteImage from "application/assets/delete.png";
 
-const Integrantes  = ({ integrantes,onUpdate,onDelete }) => {
+const Integrantes  = ({ integrantes,onUpdate,onDelete,onEdit }) => {
     renderItem = (integrante) => (
         <TouchableOpacity 
             onPress= {() => 
-                onUpdate({... integrante, done:!integrante.done})} style = {styles.listItem} key={integrante.name}>
+                onEdit(integrante)} style = {styles.listItem} key={integrante.name}>
+            <ChecKBox 
+                checkedCheckBoxColor = "#aaa"
+                onClick = {() => {onUpdate({...integrante, done : !integrante.done});
+                }}
+                isChecked = {integrante.done}
+            />
             <Text style = {[styles.textBox, integrante.done && styles.textDone]} >
                 {integrante.name}
             </Text>
@@ -39,8 +46,14 @@ const Integrantes  = ({ integrantes,onUpdate,onDelete }) => {
     <SectionList
         style={styles.container}
         sections = {integrantes && integrantes.length ? [
-            {title: 'Sin hacer',data: integrantes.filter(integrante => !integrante.done)},
-            {title: 'Finalizadas', data: integrantes.filter(integrantes => integrantes.done)}
+            {title: 'Sin hacer',
+                data: integrantes.filter(integrante => !integrante.done)
+                                 .sort((a,b) => a.priority > b.priority ? 1 : a.priority < b.priority ? -1 : 0)
+            },
+            {title: 'Finalizadas', 
+                data: integrantes.filter(integrantes => integrantes.done)
+                                 .sort((a,b) => a.priority > b.priority ? 1 : a.priority < b.priority ? -1 : 0)
+            }
         ] : []} 
         renderItem = {({item}) => renderItem(item)}
         renderSectionHeader = {renderSectionHead}
