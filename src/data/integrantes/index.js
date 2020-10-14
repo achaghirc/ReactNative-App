@@ -20,7 +20,7 @@ const getIntegrantes = async () => {
        name: integrante.name,
        description: integrante.description,
        done: integrante.done,
-       createdAt: new Date(),
+       date: integrante.date,
        priority: integrante.priority
    });
 

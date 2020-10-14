@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { View,Image,Text,StyleSheet,TouchableOpacity,Button,Linking} from 'react-native';
 import BasicAddItems from "application/src/components/BasicAddItems";
+import OwnDateTimePicker from "application/src/components/OwnDateTimePicker";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 /* import { TouchableOpacity } from 'react-native-gesture-handler'; */
 import saveImage from "application/assets/save.png";
-import Lightbox from 'react-native-lightbox';
+import moment from "moment";
 
 const styles = StyleSheet.create ({
     icon: {
@@ -34,7 +35,32 @@ const styles = StyleSheet.create ({
     img: {
       height:"100%",
       width: "100%"
-    }
+    },
+    block: {
+      margin: 5,
+    },
+    textFecha: {
+      alignContent:"flex-start",
+      flex:1,
+      textAlign: "left",
+      borderBottomWidth: 1,
+      padding:5
+    },
+    text: {
+      alignContent:"flex-start",
+      flex:1,
+      textAlign: "right",
+      color: '#CDCACA',
+      borderBottomWidth: 1,
+      padding: 5,
+    },
+    listItem: {
+      margin: 5,
+      padding:5,
+      width: "100%",
+      flexDirection: "row",
+      alignItems: "center",    
+  },
 });
 
 export default class EditTodo extends Component {
@@ -90,6 +116,7 @@ export default class EditTodo extends Component {
       updateTarea:newTarea
     });
   };
+  
   getPicture = async () => {
     //Solicitar Permisos 
     const {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -124,15 +151,27 @@ export default class EditTodo extends Component {
 
   render() {
     const {tarea} = this.state;
-    const {name, description,priority, location,img} = tarea;
+    const {name, description,priority,date,location,img} = tarea;
     return (
       <View>
         <BasicAddItems 
           name = {name}
           description ={description}
           priority={priority}
+          date= {date}
           onChange = {property => this.updateLocalTarea(property)}
         />
+        <View >
+        <View style={styles.block}>
+             <TouchableOpacity style = {styles.listItem} onPress = {this.showDatepicker} > 
+                 <Text style={styles.textFecha} >Fecha Limite </Text>
+                 <Text style={styles.text}>
+                     {date[0]}
+                 </Text> 
+             </TouchableOpacity>
+          </View>
+        </View>
+        
         <View style={styles.blockRow}>
           <Text style={{}}>Posicion</Text>
           {!location && (
