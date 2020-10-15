@@ -3,6 +3,8 @@ import { Text, View, TextInput, StyleSheet, Button, Picker } from "react-native"
 import PriorityPicker from "application/src/components/PriorityPicker";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from "moment";
+import Integrantes from "application/src/components/integrantes";
+import {getIntegrantes } from "application/src/data/integrantes"
 
 const priorities = ["Urgente", "Importante", "Normal", "No Urgente"];
 
@@ -12,34 +14,29 @@ const BasicAddItems = ({ name, description, priority, date, onChange }) => {
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [displayDate, setDisplayDate] = useState(false);
-    const [resDate, setResDate] = useState('Hola'); 
+    const [resDate, setResDate] = useState(' '); 
 
     const onSelectDate = (event, selectedDate) => {
         const currentDate = selectedDate || date;
+        setShow(false);
         setDate(currentDate);
         date = formatedDate(currentDate);
-        console.log("Date formated: ", date, "Date NO Fotmated ", currentDate);
         setResDate(date);
-        console.log("RESDATE ==> ", resDate);
-        setShow(false);
         setDisplayDate(true);
-        console.log('LOG 3 --> El estado de show es ', show, 'y el displayDate es ', displayDate);
-
+        setShow(false);
     };
 
     const showMode = (currentMode) => {
         setShow(true);
         setMode(currentMode);
-        console.log('LOG 2 --> El estado de show es ', show, 'y el displayDate es ', displayDate);
     };
 
     const showDatepicker = () => {
         showMode('date');
-        console.log('LOG 1 --> El estado de show es ', show, 'y el displayDate es ', displayDate);
     };
 
     const formatedDate = (dateFormated) => {
-        const fecha = dateFormated.toISOString().slice(0, 10).split('-').reverse().join('/');
+        const fecha = moment(dateFormated).format('DD-MM-YYYY');
         return fecha;
     };
 
@@ -61,10 +58,10 @@ const BasicAddItems = ({ name, description, priority, date, onChange }) => {
             <View style = { styles.block } >
                 <Text> Descripcion </Text> 
                 <TextInput style = {[styles.text, styles.textArea]}
-                value = { description }
-                onChangeText = { description => onChange({ description }) }
-                numberOfLines = { 4 }
-                multiline = { true }
+                    value = { description }
+                    onChangeText = { description => onChange({ description }) }
+                    numberOfLines = { 4 }
+                    multiline = { true }
                     clearButtonMode = "always" />
             </View> 
                 <View style = { styles.block } >
@@ -111,7 +108,7 @@ const BasicAddItems = ({ name, description, priority, date, onChange }) => {
                         </View>
                     )
                 } 
-            </View> 
+            </View>  
         </View>
     );
 };

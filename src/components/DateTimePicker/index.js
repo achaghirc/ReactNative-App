@@ -1,68 +1,41 @@
 import React, {useState} from 'react';
-import {View, Button, Platform,StyleSheet} from 'react-native';
+import {View, Text, Platform,StyleSheet, Button} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from "moment";
+import CalendarPicker from "react-native-calendar-picker";
 
 
-
-const MyDateTimePicker = (date,onChange2) => {
+const MyDateTimePicker = (onChange) => {  
   
-    const [newdate, setDate] = useState(new Date());
-    const [mode, setMode] = useState('date');
+    const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
-    const [DisplayDate, setDisplayDate] = useState(false);
     
-    const onChange = (event, selectedDate) => {
+    
+    const onSelectDate = (selectedDate) => {
       const currentDate = selectedDate || newdate;
-      setShow(Platform.OS === 'ios');
       setDate(currentDate);
-      setDisplayDate(true);
     };
-    
-    const showMode = (currentMode) => {
+
+    const changeShow = () => {
       setShow(true);
-      setMode(currentMode);
-    };
-    
-    const showDatepicker = () => {
-      showMode('date');
-    };
+    }
 
-  render () 
-  {
-    const {newDate, mode,show,DisplayDate} = useState();
-    return (
-      <React.Fragment>
+  return (
+      <View>
         <View>
-          <View>
-            Button onPress={showDatepicker} title="Show date picker!" />
-          </View>
-        {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={newdate}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={newdate => onChange2({newdate})}
-        />
-      )}
-        {DisplayDate &&  (
-          <View style={styles.block}>
-             <TouchableOpacity style = {styles.listItem} onPress = {this.showDatepicker} > 
-                 <Text style={styles.textFecha} >Fecha Limite </Text>
-                 <Text style={styles.text}>
-                     {moment(date)
-                         .format('YYYY-MM-DD')}
-                 </Text> 
-             </TouchableOpacity>
+          {show && (
+          <CalendarPicker onDateChange= {onSelectDate} />    
+          )}
+          {!show && ( 
+            <Button title="Selecciona fecha" onPress={changeShow}/>
+          )}
           </View>
 
-      )}
-    </View>
-  </React.Fragment> 
+        <View>
+            <Text>La fecha seleccionada es: {moment(date).format('YYYY-MM-DD')}</Text>
+        </View>
+      </View>
     );
-  };
 };
 
 const styles = StyleSheet.create ({

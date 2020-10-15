@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { Modal, Text, View, TextInput, StyleSheet, Button, Picker } from "react-native";
 import BasicAddItems from "application/src/components/BasicAddItems";
-import MyDateTimePicker from "application/src/components/DateTimePicker";
-import { ScrollView, FlatList } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
+import MyDateTimePicker from "../DateTimePicker";
+
 
 const initialState = {
     name: "",
@@ -25,7 +24,7 @@ class AddTarea extends Component {
     addTarea = () => {
         const { onAddTarea, onCloseModal } = this.props;
         const { name, description, date, priority } = this.state;
-        console.log('La fecha aqui es ', date);
+        console.log('La fecha aqui es ', date[0]);
         console.log('El nombre aqui es: ', name);
         console.log('La prioridad aqui es ', priority);
         onAddTarea({ name, description, date, priority });
@@ -54,7 +53,6 @@ class AddTarea extends Component {
                                 priority = { priority }
                                 date = { date }
                                 onChange = { newState => this.setState(newState) }/>  
-                            
                         <View style = {{ flexDirection: "row", paddingBottom: 28, justifyContent: "space-around" }}>
                             <Button title = "Cancelar"
                                 onPress = { onCloseModal }

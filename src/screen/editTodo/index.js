@@ -162,29 +162,29 @@ export default class EditTodo extends Component {
           onChange = {property => this.updateLocalTarea(property)}
         />
         <View >
-        <View style={styles.block}>
-             <TouchableOpacity style = {styles.listItem} onPress = {this.showDatepicker} > 
-                 <Text style={styles.textFecha} >Fecha Limite </Text>
-                 <Text style={styles.text}>
-                     {date[0]}
-                 </Text> 
-             </TouchableOpacity>
+          <View style={styles.block}>
+            <TouchableOpacity style = {styles.listItem} onPress = {this.showDatepicker} > 
+                <Text style={styles.textFecha} >Fecha Limite </Text>
+                <Text style={styles.text}>
+                    {date[0]}
+                </Text> 
+            </TouchableOpacity>
           </View>
         </View>
         
         <View style={styles.blockRow}>
           <Text style={{}}>Posicion</Text>
-          {!location && (
-            <View style={styles.rowContent}>
-              <Button 
-                style={styles.rowContent}
-                title="Añadir Posicion"
-                onPress={this.getLocation}
-              />
-            </View>
-          )}
-          {location && (
-            <View style={styles.rowContent}>
+            {!location && (
+              <View style={styles.rowContent}>
+                <Button 
+                  style={styles.rowContent}
+                  title="Añadir Posicion"
+                  onPress={this.getLocation}
+                />
+              </View>
+            )}
+            {location && (
+              <View style={styles.rowContent}>
                 <TouchableOpacity onPress={() => this.openMap(location)}>
                   <Text>
                     [{location.latitude},{location.longitude}]
@@ -194,8 +194,9 @@ export default class EditTodo extends Component {
                   title="Borrar" 
                   onPress={() => this.updateLocalTarea({location: null})}
                 />
-            </View>
-          )}
+              </View>
+              )
+            }
         </View>
       </View>
     );
